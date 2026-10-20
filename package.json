@@ -5,5 +5,13 @@
   "type": "module",
   "workspaces": [
     "services/*/*"
-  ]
+  ],
+  "scripts": {
+    "tdk:project": "tdk project --yes",
+    "tdk:dry-run": "tdk up --dry-run",
+    "tdk:up": "tdk up"
+  },
+  "devDependencies": {
+    "@tdk-landscape/tdk-cli-core": "1.3.186"
+  }
 }
