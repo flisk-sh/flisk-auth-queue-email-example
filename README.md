@@ -31,7 +31,7 @@ This example answers that with one small app: sign in, click **Email me a usage 
 
 > **Repository-pinned CLI (optional):** Run `bun install` from the repository root to install the version pinned in `package.json`. Use `bun run tdk:project` to initialize project config, `bun run tdk:dry-run` to preview startup, or `bun run tdk:up -- <stack>` to start a stack. The global npm and standalone binary installation paths remain available.
 
-> **Requires TDK CLI 1.3.76 or newer** (1.3.75 for the Vue frontend's `"framework": "vue"`; 1.3.76 fixes `nats`/`mailpit` staying disabled, [tdk-cli-core#155](https://github.com/flisk-sh/flisk/issues/155)). Prerequisites: Docker running, [Tilt](https://docs.tilt.dev/install.html), [Bun](https://bun.sh/docs/installation) and the [TDK CLI](https://github.com/flisk-sh/flisk#installation).
+> **Requires TDK CLI 1.3.76 or newer** (1.3.75 for the Vue frontend's `"framework": "vue"`; 1.3.76 fixes `nats`/`mailpit` staying disabled, [flisk#155](https://github.com/flisk-sh/flisk/issues/155)). Prerequisites: Docker running, [Tilt](https://docs.tilt.dev/install.html), [Bun](https://bun.sh/docs/installation) and the [TDK CLI](https://github.com/flisk-sh/flisk#installation).
 
 ```bash
 git clone https://github.com/flisk-sh/tdk-auth-queue-email-example.git
