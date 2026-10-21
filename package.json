@@ -12,6 +12,6 @@
     "tdk:up": "tdk up"
   },
   "devDependencies": {
-    "@tdk-landscape/tdk-cli-core": "1.3.186"
+    "@flisk-sh/flisk": "1.3.190"
   }
 }
