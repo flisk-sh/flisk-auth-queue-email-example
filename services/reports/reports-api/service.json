@@ -4,10 +4,12 @@
   "stack": "reports",
   "port": 4410,
   "featuresEnabled": [
-    "nats"
+    "nats",
+    "prisma"
   ],
   "dependsOn": [
-    "auth-emulator"
+    "auth-emulator",
+    "reports-migrator"
   ],
   "healthCheckPath": "/health",
   "params": {

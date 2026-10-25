@@ -1,0 +1,13 @@
+{
+  "appName": "reports-migrator",
+  "appType": "migrator",
+  "stack": "reports",
+  "port": 7410,
+  "featuresEnabled": [
+    "prisma"
+  ],
+  "dependsOn": [
+    "postgres"
+  ],
+  "schemaVersion": 1
+}

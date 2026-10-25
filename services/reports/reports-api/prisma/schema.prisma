@@ -1,0 +1,10 @@
+// Prisma owns the migrations (prisma/migrations), applied by `prisma migrate deploy` at startup.
+// The reports table carries no Prisma models: reports-api queries it with Bun's SQL client.
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
