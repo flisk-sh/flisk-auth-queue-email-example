@@ -3,6 +3,7 @@ import { createApp } from '../src/app';
 import type { Verify } from '../src/auth';
 import { type ReportRequested, type ReportStatus, SUBJECT_REQUESTED, SUBJECT_STATUS } from '../src/events';
 import { InMemoryQueue } from '../src/queue';
+import { InMemoryReportStore } from '../src/store';
 
 // Tokens are "<sub>". The real verifier (JWKS, issuer, audience) is exercised against
 // the running auth-emulator, see "Check it works" in the README.
@@ -13,7 +14,7 @@ const verify: Verify = async (token) => {
 
 async function setup() {
   const queue = new InMemoryQueue();
-  const app = await createApp({ verify, queue });
+  const app = await createApp({ verify, queue, store: new InMemoryReportStore() });
   const as = (sub: string) => ({ Authorization: `Bearer ${sub}`, 'Content-Type': 'application/json' });
   const request = (sub: string, body: unknown) =>
     app.request('/api/reports', { method: 'POST', headers: as(sub), body: JSON.stringify(body) });

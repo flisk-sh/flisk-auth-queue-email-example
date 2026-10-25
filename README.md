@@ -46,6 +46,7 @@ The first start builds the images and takes a few minutes.
 | --- | --- | --- | --- |
 | [`web`](services/reports/web) | Vue 3 app | `reports` | http://app.tdk-auth-queue-email-example.localhost/reports/ |
 | [`reports-api`](services/reports/reports-api) | Hono API | `reports` | http://api.tdk-auth-queue-email-example.localhost/api/reports |
+| [`reports-migrator`](services/reports/reports-migrator) | migrator (runs once) | `reports` | none |
 | [`report-worker`](services/reports/report-worker) | queue worker | `reports` | none (it has no HTTP server) |
 | [`auth-emulator`](services/identity/auth-emulator) | Hono OIDC issuer | `identity` | http://api.tdk-auth-queue-email-example.localhost/api/auth-emulator |
 | Mailpit | SMTP + inbox UI | infra | http://localhost:8025 |
@@ -71,7 +72,7 @@ Be clear about what a stand-in is:
 - Only `Queue` has one real implementation (NATS). Nothing here is tested against SQS, and JetStream is not SQS: ordering, visibility timeouts and dead-letter queues differ. Keep the interface small and test each real adapter against the real service.
 - `SmtpMailer` sends without credentials. Using SES or SendGrid over SMTP needs `SMTP_USER` and `SMTP_PASSWORD` support, which is a few lines but not here.
 - TDK starts NATS only when `services/platform/messaging/docker-compose.yml` exists, and it does not generate that file. This repo ships one. The container name and network in it follow TDK's naming (`<project>_nats`, `<project>_backend`).
-- Reports are held in memory in `reports-api`, and restarting it forgets them.
+- Reports are stored in Postgres. `reports-migrator` creates the table once before the API starts, and a restart keeps them. The API reads and writes them through [`PostgresReportStore`](services/reports/reports-api/src/postgres-store.ts).
 
 ## Test it
 

@@ -2,29 +2,14 @@ import { Hono } from 'hono';
 import type { Claims, Verify } from './auth';
 import { type ReportRequested, type ReportStatus, SUBJECT_REQUESTED, SUBJECT_STATUS } from './events';
 import type { Queue } from './queue';
-
-export interface Report {
-  id: string;
-  userId: string;
-  period: string;
-  status: 'queued' | ReportStatus['status'];
-  attempts: number;
-  crashFirstAttempt: boolean;
-  rows?: number;
-  sentTo?: string;
-  error?: string;
-  requestedAt: string;
-  updatedAt: string;
-}
+import type { ReportStore } from './store';
 
 type Env = { Variables: { user: Claims } };
 
 const PERIOD = /^\d{4}-(0[1-9]|1[0-2])$/;
 
-export async function createApp(deps: { verify: Verify; queue: Queue }) {
+export async function createApp(deps: { verify: Verify; queue: Queue; store: ReportStore }) {
   const app = new Hono<Env>();
-  const reports = new Map<string, Report>();
-  let nextId = 1;
 
   // The Vue app runs on its own origin and calls this API directly.
   app.use('*', async (c, next) => {
@@ -51,9 +36,9 @@ export async function createApp(deps: { verify: Verify; queue: Queue }) {
 
   app.get('/api/me', (c) => c.json({ data: c.get('user') }));
 
-  app.get('/api/reports', (c) => {
+  app.get('/api/reports', async (c) => {
     const { sub } = c.get('user');
-    return c.json({ data: [...reports.values()].filter((r) => r.userId === sub).reverse() });
+    return c.json({ data: await deps.store.listForUser(sub) });
   });
 
   app.post('/api/reports', async (c) => {
@@ -64,18 +49,11 @@ export async function createApp(deps: { verify: Verify; queue: Queue }) {
     const period = typeof body?.period === 'string' ? body.period : '';
     if (!PERIOD.test(period)) return c.json({ error: 'period must look like 2026-08' }, 400);
 
-    const now = new Date().toISOString();
-    const report: Report = {
-      id: `r_${nextId++}`,
+    const report = await deps.store.create({
       userId: user.sub,
       period,
-      status: 'queued',
-      attempts: 0,
       crashFirstAttempt: body?.crashFirstAttempt === true,
-      requestedAt: now,
-      updatedAt: now,
-    };
-    reports.set(report.id, report);
+    });
 
     const message: ReportRequested = {
       reportId: report.id,
@@ -91,14 +69,7 @@ export async function createApp(deps: { verify: Verify; queue: Queue }) {
   // The worker reports progress over the queue; the API never calls it directly.
   await deps.queue.subscribe(SUBJECT_STATUS, 'reports-api-status', async (raw) => {
     const event = raw as ReportStatus;
-    const report = reports.get(event.reportId);
-    if (!report) return;
-    report.status = event.status;
-    report.attempts = Math.max(report.attempts, event.attempt);
-    report.rows = event.rows ?? report.rows;
-    report.sentTo = event.sentTo ?? report.sentTo;
-    report.error = event.error;
-    report.updatedAt = event.at;
+    await deps.store.apply(event.reportId, event);
   });
 
   return app;
