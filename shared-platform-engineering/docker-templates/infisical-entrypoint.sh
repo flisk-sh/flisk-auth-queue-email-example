@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2026 TDK Landscape contributors
+# Copyright (c) 2026 Flisk Landscape contributors
 # SPDX-License-Identifier: MIT
 # =============================================================================
 # 🔐 UNIVERSAL INFISICAL ENTRYPOINT - Zero-Code Secret Injection
@@ -88,7 +88,7 @@ DB_WAIT_INTERVAL="${DB_WAIT_INTERVAL:-2}"
 # =============================================================================
 # 
 # Problem: Tilt creates databases but doesn't know what Infisical contains.
-#          This causes DATABASE_URL mismatch (e.g., tdk_project_staff vs staff_db_prod)
+#          This causes DATABASE_URL mismatch (e.g., flisk_project_staff vs staff_db_prod)
 #
 # Solution: TILT_* prefixed variables ALWAYS override Infisical secrets
 #           Tilt sets TILT_DATABASE_URL → we export it as DATABASE_URL BEFORE infisical run
@@ -153,7 +153,7 @@ wait_for_postgres() {
       
       # If we have psql, do a deeper health check
       if command -v psql >/dev/null 2>&1; then
-        if PGPASSWORD="${db_password:-}" psql -h "${db_host}" -p "${db_port}" -U "${db_user:-tdk_project}" -d "${db_name}" -c "SELECT 1" >/dev/null 2>&1; then
+        if PGPASSWORD="${db_password:-}" psql -h "${db_host}" -p "${db_port}" -U "${db_user:-flisk_project}" -d "${db_name}" -c "SELECT 1" >/dev/null 2>&1; then
           log_success "✅ Database ${db_name} is ready!"
           return 0
         fi

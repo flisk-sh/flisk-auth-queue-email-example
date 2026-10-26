@@ -7,11 +7,11 @@
     "services/*/*"
   ],
   "scripts": {
-    "tdk:project": "tdk project --yes",
-    "tdk:dry-run": "tdk up --dry-run",
-    "tdk:up": "tdk up"
+    "flisk:project": "flisk project --yes",
+    "flisk:dry-run": "flisk up --dry-run",
+    "flisk:up": "flisk up"
   },
   "devDependencies": {
-    "@flisk-sh/flisk": "1.3.190"
+    "@flisk-sh/flisk": "1.4.5"
   }
 }
