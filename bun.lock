@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "tdk-auth-queue-email-example",
+      "name": "flisk-auth-queue-email-example",
       "devDependencies": {
         "@flisk-sh/flisk": "1.4.5",
       },

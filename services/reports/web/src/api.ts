@@ -17,10 +17,10 @@ export interface Profile {
   email?: string;
 }
 
-// TDK does not publish backend ports on localhost. Traefik routes each backend at
+// Flisk does not publish backend ports on localhost. Traefik routes each backend at
 // api.<project>.localhost/api/<name>, with that prefix stripped before the request
 // reaches the service.
-const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://api.tdk-auth-queue-email-example.localhost/api';
+const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://api.flisk-auth-queue-email-example.localhost/api';
 export const AUTH_URL = import.meta.env.VITE_AUTH_URL ?? `${API_BASE}/auth-emulator`;
 export const REPORTS_URL = import.meta.env.VITE_REPORTS_URL ?? `${API_BASE}/reports`;
 export const MAILPIT_URL = import.meta.env.VITE_MAILPIT_URL ?? 'http://localhost:8025';

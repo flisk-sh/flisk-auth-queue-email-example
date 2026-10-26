@@ -9,7 +9,7 @@ const need = (name: string): string => {
   return value;
 };
 
-// TILT_NATS_URL is injected by TDK for every backend and worker.
+// TILT_NATS_URL is injected by Flisk for every backend and worker.
 const queue = await NatsQueue.connect(process.env.NATS_URL || need('TILT_NATS_URL'), {
   retryDelayMs: Number(process.env.RETRY_DELAY_MS || 3000),
 });

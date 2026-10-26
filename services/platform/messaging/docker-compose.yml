@@ -9,11 +9,11 @@
 services:
   nats:
     image: nats:2.10-alpine
-    container_name: tdk_auth_queue_email_example_nats
+    container_name: flisk_auth_queue_email_example_nats
     command: ["-js", "-sd", "/data", "-m", "8222"]
     restart: unless-stopped
     volumes:
-      - tdk_auth_queue_email_example_nats_data:/data
+      - flisk_auth_queue_email_example_nats_data:/data
     networks:
       - backend
     healthcheck:
@@ -25,7 +25,7 @@ services:
   # Catches every email the worker sends. Inbox: http://localhost:8025
   mailpit:
     image: axllent/mailpit:v1.21
-    container_name: tdk_auth_queue_email_example_mailpit
+    container_name: flisk_auth_queue_email_example_mailpit
     restart: unless-stopped
     ports:
       - "8025:8025"
@@ -40,15 +40,15 @@ services:
   # Registered by Flisk but never started (auto_init=False). Kept so the file loads.
   redis:
     image: redis:7-alpine
-    container_name: tdk_auth_queue_email_example_redis
+    container_name: flisk_auth_queue_email_example_redis
     restart: unless-stopped
     networks:
       - backend
 
 volumes:
-  tdk_auth_queue_email_example_nats_data:
+  flisk_auth_queue_email_example_nats_data:
 
 networks:
   backend:
-    name: tdk_auth_queue_email_example_backend
+    name: flisk_auth_queue_email_example_backend
     external: true

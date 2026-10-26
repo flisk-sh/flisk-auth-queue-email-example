@@ -6,7 +6,7 @@
   "dependsOn": [],
   "healthCheckPath": "/health",
   "params": {
-    "OIDC_PUBLIC_ISSUER": "http://api.tdk-auth-queue-email-example.localhost/api/auth-emulator",
+    "OIDC_PUBLIC_ISSUER": "http://api.flisk-auth-queue-email-example.localhost/api/auth-emulator",
     "OIDC_AUDIENCE": "reports-api"
   },
   "schemaVersion": 1

@@ -8,28 +8,28 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: tdk_auth_queue_email_example_postgres
+    container_name: flisk_auth_queue_email_example_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: tdk_auth_queue_email_example
+      POSTGRES_USER: flisk_auth_queue_email_example
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: postgres
     ports:
       - "${FLISK_BIND_ADDRESS:-127.0.0.1}:${FLISK_POSTGRES_PORT:-15432}:5432"
     volumes:
-      - tdk_auth_queue_email_example_postgres_data:/var/lib/postgresql/data
+      - flisk_auth_queue_email_example_postgres_data:/var/lib/postgresql/data
     networks:
       - database
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U tdk_auth_queue_email_example -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U flisk_auth_queue_email_example -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 20
 
 networks:
   database:
-    name: tdk_auth_queue_email_example_database
+    name: flisk_auth_queue_email_example_database
     external: true
 
 volumes:
-  tdk_auth_queue_email_example_postgres_data:
+  flisk_auth_queue_email_example_postgres_data:

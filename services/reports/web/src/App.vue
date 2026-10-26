@@ -73,7 +73,7 @@ onBeforeUnmount(() => clearInterval(timer));
   <main class="page">
     <header class="top">
       <div>
-        <p class="eyebrow">Vue 3 + Hono + NATS on TDK</p>
+        <p class="eyebrow">Vue 3 + Hono + NATS on Flisk</p>
         <h1>Usage reports</h1>
       </div>
       <a class="inbox" :href="MAILPIT_URL" target="_blank" rel="noopener">Open the email inbox</a>

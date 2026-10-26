@@ -11,7 +11,7 @@ const need = (name: string): string => {
   return value;
 };
 
-// TILT_NATS_URL is injected by TDK for every backend. DATABASE_URL comes from the prisma feature;
+// TILT_NATS_URL is injected by Flisk for every backend. DATABASE_URL comes from the prisma feature;
 // the schema is applied by reports-migrator before this starts.
 const queue = await NatsQueue.connect(process.env.NATS_URL || need('TILT_NATS_URL'));
 const store = new PostgresReportStore(new SQL(cleanDatabaseUrl(need('DATABASE_URL'))));

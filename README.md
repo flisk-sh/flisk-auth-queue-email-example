@@ -34,8 +34,8 @@ This example answers that with one small app: sign in, click **Email me a usage 
 > **Requires Flisk CLI 1.3.76 or newer** (1.3.75 for the Vue frontend's `"framework": "vue"`; 1.3.76 fixes `nats`/`mailpit` staying disabled, [flisk#155](https://github.com/flisk-sh/flisk/issues/155)). Prerequisites: Docker running, [Tilt](https://docs.tilt.dev/install.html), [Bun](https://bun.sh/docs/installation) and the [Flisk CLI](https://github.com/flisk-sh/flisk#installation).
 
 ```bash
-git clone https://github.com/flisk-sh/tdk-auth-queue-email-example.git
-cd tdk-auth-queue-email-example
+git clone https://github.com/flisk-sh/flisk-auth-queue-email-example.git
+cd flisk-auth-queue-email-example
 flisk project        # creates .env and the generated config in a fresh clone
 flisk up
 ```
@@ -44,11 +44,11 @@ The first start builds the images and takes a few minutes.
 
 | Resource | Type | Stack | URL |
 | --- | --- | --- | --- |
-| [`web`](services/reports/web) | Vue 3 app | `reports` | http://app.tdk-auth-queue-email-example.localhost/reports/ |
-| [`reports-api`](services/reports/reports-api) | Hono API | `reports` | http://api.tdk-auth-queue-email-example.localhost/api/reports |
+| [`web`](services/reports/web) | Vue 3 app | `reports` | http://app.flisk-auth-queue-email-example.localhost/reports/ |
+| [`reports-api`](services/reports/reports-api) | Hono API | `reports` | http://api.flisk-auth-queue-email-example.localhost/api/reports |
 | [`reports-migrator`](services/reports/reports-migrator) | migrator (runs once) | `reports` | none |
 | [`report-worker`](services/reports/report-worker) | queue worker | `reports` | none (it has no HTTP server) |
-| [`auth-emulator`](services/identity/auth-emulator) | Hono OIDC issuer | `identity` | http://api.tdk-auth-queue-email-example.localhost/api/auth-emulator |
+| [`auth-emulator`](services/identity/auth-emulator) | Hono OIDC issuer | `identity` | http://api.flisk-auth-queue-email-example.localhost/api/auth-emulator |
 | Mailpit | SMTP + inbox UI | infra | http://localhost:8025 |
 | NATS | JetStream | infra | internal (`TILT_NATS_URL`) |
 
@@ -93,7 +93,7 @@ cd ../web && bunx vitest run && bun run build
 ## How it was made
 
 ```bash
-mkdir tdk-auth-queue-email-example && cd tdk-auth-queue-email-example
+mkdir flisk-auth-queue-email-example && cd flisk-auth-queue-email-example
 flisk project --yes
 flisk resource auth-emulator --type backend --stack identity
 flisk resource reports-api --type backend --stack reports
