@@ -1,21 +1,15 @@
 {
-  "appName": "reports-api",
-  "appType": "backend",
-  "stack": "reports",
-  "port": 4410,
-  "featuresEnabled": [
-    "nats",
-    "prisma"
-  ],
-  "dependsOn": [
-    "auth-emulator",
-    "reports-migrator"
-  ],
-  "healthCheckPath": "/health",
-  "params": {
-    "OIDC_ISSUER": "http://api.flisk-auth-queue-email-example.localhost/api/auth-emulator",
-    "OIDC_JWKS_URL": "http://auth-emulator:4400/.well-known/jwks.json",
-    "OIDC_AUDIENCE": "reports-api"
-  },
-  "schemaVersion": 1
+	"appName": "reports-api",
+	"appType": "backend",
+	"stack": "reports",
+	"port": 4410,
+	"featuresEnabled": ["nats", "prisma"],
+	"dependsOn": ["auth-emulator", "reports-migrator"],
+	"healthCheckPath": "/health",
+	"params": {
+		"OIDC_ISSUER": "http://api.flisk-auth-queue-email-example.localhost/api/auth-emulator",
+		"OIDC_JWKS_URL": "http://auth-emulator:4400/.well-known/jwks.json",
+		"OIDC_AUDIENCE": "reports-api"
+	},
+	"schemaVersion": 1
 }

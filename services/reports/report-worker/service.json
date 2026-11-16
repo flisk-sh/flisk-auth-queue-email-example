@@ -1,17 +1,15 @@
 {
-  "appName": "report-worker",
-  "appType": "worker",
-  "stack": "reports",
-  "port": 4420,
-  "featuresEnabled": [
-    "nats"
-  ],
-  "dependsOn": [],
-  "params": {
-    "SMTP_HOST": "mailpit",
-    "SMTP_PORT": "1025",
-    "MAIL_FROM": "reports@example.test",
-    "RETRY_DELAY_MS": "3000"
-  },
-  "schemaVersion": 1
+	"appName": "report-worker",
+	"appType": "worker",
+	"stack": "reports",
+	"port": 4420,
+	"featuresEnabled": ["nats"],
+	"dependsOn": [],
+	"params": {
+		"SMTP_HOST": "mailpit",
+		"SMTP_PORT": "1025",
+		"MAIL_FROM": "reports@example.test",
+		"RETRY_DELAY_MS": "3000"
+	},
+	"schemaVersion": 1
 }

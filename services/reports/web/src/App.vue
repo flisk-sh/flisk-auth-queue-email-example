@@ -1,69 +1,71 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { computed, onBeforeUnmount, ref } from "vue";
 import {
-  MAILPIT_URL,
-  type Profile,
-  type Report,
-  STATUS_LABEL,
-  createReportsApi,
-  recentPeriods,
-  signIn,
-} from './api';
+	createReportsApi,
+	MAILPIT_URL,
+	type Profile,
+	type Report,
+	recentPeriods,
+	STATUS_LABEL,
+	signIn,
+} from "./api";
 
-const token = ref('');
+const token = ref("");
 const profile = ref<Profile | null>(null);
 const reports = ref<Report[]>([]);
-const error = ref('');
+const error = ref("");
 const busy = ref(false);
 const periods = recentPeriods();
 const period = ref(periods[0]);
 const crashFirstAttempt = ref(false);
 
-const api = computed(() => (token.value ? createReportsApi(token.value) : null));
+const api = computed(() =>
+	token.value ? createReportsApi(token.value) : null,
+);
 let timer: ReturnType<typeof setInterval> | undefined;
 
 async function refresh() {
-  if (!api.value) return;
-  try {
-    reports.value = await api.value.list();
-    error.value = '';
-  } catch (e) {
-    error.value = (e as Error).message;
-  }
+	if (!api.value) return;
+	try {
+		reports.value = await api.value.list();
+		error.value = "";
+	} catch (e) {
+		error.value = (e as Error).message;
+	}
 }
 
 async function login(username: string, password: string) {
-  busy.value = true;
-  try {
-    token.value = await signIn(username, password);
-    profile.value = await api.value!.me();
-    await refresh();
-    timer = setInterval(refresh, 1000);
-    error.value = '';
-  } catch (e) {
-    error.value = (e as Error).message;
-  } finally {
-    busy.value = false;
-  }
+	busy.value = true;
+	try {
+		token.value = await signIn(username, password);
+		profile.value = await api.value!.me();
+		await refresh();
+		timer = setInterval(refresh, 1000);
+		error.value = "";
+	} catch (e) {
+		error.value = (e as Error).message;
+	} finally {
+		busy.value = false;
+	}
 }
 
 function logout() {
-  clearInterval(timer);
-  token.value = '';
-  profile.value = null;
-  reports.value = [];
+	clearInterval(timer);
+	token.value = "";
+	profile.value = null;
+	reports.value = [];
 }
 
 async function requestReport() {
-  busy.value = true;
-  try {
-    await api.value!.request(period.value, crashFirstAttempt.value);
-    await refresh();
-  } catch (e) {
-    error.value = (e as Error).message;
-  } finally {
-    busy.value = false;
-  }
+	busy.value = true;
+	try {
+		await api.value!.request(period.value, crashFirstAttempt.value);
+		await refresh();
+	} catch (e) {
+		error.value = (e as Error).message;
+	} finally {
+		busy.value = false;
+	}
 }
 
 onBeforeUnmount(() => clearInterval(timer));
