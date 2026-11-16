@@ -1,0 +1,33 @@
+# Shared Flisk CI from flisk-sh/.github: build and test, dependency review, CodeQL.
+name: Flisk CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "41 4 * * 1" # weekly CodeQL, so new vulnerability queries reach code that has not changed
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flisk-ci-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    if: github.event_name != 'schedule'
+    uses: flisk-sh/.github/.github/workflows/ci.yml@16754801a8248cfa1525152ff5fc74e4cb12babf # v1.2.0
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    uses: flisk-sh/.github/.github/workflows/dependency-review.yml@16754801a8248cfa1525152ff5fc74e4cb12babf # v1.2.0
+
+  codeql:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    uses: flisk-sh/.github/.github/workflows/codeql.yml@16754801a8248cfa1525152ff5fc74e4cb12babf # v1.2.0
