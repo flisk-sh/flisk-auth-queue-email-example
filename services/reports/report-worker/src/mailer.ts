@@ -1,10 +1,10 @@
-import { createTransport } from 'nodemailer';
+import { createTransport } from "nodemailer";
 
 export interface Email {
-  to: string;
-  subject: string;
-  text: string;
-  attachment: { filename: string; content: string };
+	to: string;
+	subject: string;
+	text: string;
+	attachment: { filename: string; content: string };
 }
 
 /**
@@ -13,35 +13,46 @@ export interface Email {
  * or you add an API-based implementation of this interface.
  */
 export interface Mailer {
-  send(email: Email): Promise<void>;
+	send(email: Email): Promise<void>;
 }
 
 export class SmtpMailer implements Mailer {
-  private readonly transport;
+	private readonly transport;
 
-  constructor(
-    host: string,
-    port: number,
-    private readonly from: string,
-  ) {
-    this.transport = createTransport({ host, port, secure: false, tls: { rejectUnauthorized: false } });
-  }
+	constructor(
+		host: string,
+		port: number,
+		private readonly from: string,
+	) {
+		this.transport = createTransport({
+			host,
+			port,
+			secure: false,
+			tls: { rejectUnauthorized: false },
+		});
+	}
 
-  async send(email: Email): Promise<void> {
-    await this.transport.sendMail({
-      from: this.from,
-      to: email.to,
-      subject: email.subject,
-      text: email.text,
-      attachments: [{ filename: email.attachment.filename, content: email.attachment.content, contentType: 'text/csv' }],
-    });
-  }
+	async send(email: Email): Promise<void> {
+		await this.transport.sendMail({
+			from: this.from,
+			to: email.to,
+			subject: email.subject,
+			text: email.text,
+			attachments: [
+				{
+					filename: email.attachment.filename,
+					content: email.attachment.content,
+					contentType: "text/csv",
+				},
+			],
+		});
+	}
 }
 
 /** Test double. */
 export class MemoryMailer implements Mailer {
-  readonly sent: Email[] = [];
-  async send(email: Email): Promise<void> {
-    this.sent.push(email);
-  }
+	readonly sent: Email[] = [];
+	async send(email: Email): Promise<void> {
+		this.sent.push(email);
+	}
 }
