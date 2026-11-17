@@ -1,0 +1,12 @@
+{
+  "mode": "block",
+  "guards": {
+    "secret-scan": "block",
+    "pinned-actions": "block",
+    "workflow-permissions": "block",
+    "dead-links": "block",
+    "done-without-green": "block",
+    "api-contract": "block",
+    "migrations-append-only": "block"
+  }
+}
