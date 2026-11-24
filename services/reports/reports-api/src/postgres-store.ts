@@ -66,7 +66,10 @@ export class PostgresReportStore implements ReportStore {
         sent_to = coalesce(${event.sentTo ?? null}, sent_to),
         error = ${event.error ?? null},
         updated_at = ${event.at}::timestamptz
-      where id = ${reportId} and attempts <= ${event.attempt}
+      where id = ${reportId} and (
+        attempts < ${event.attempt} or
+        (attempts = ${event.attempt} and updated_at <= ${event.at}::timestamptz)
+      )
       returning id`;
 		return rows.length > 0;
 	}
