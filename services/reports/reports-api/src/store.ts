@@ -36,7 +36,7 @@ export interface ReportStore {
 	/** Creates the report and returns it with its id. */
 	create(draft: NewReport): Promise<Report>;
 	listForUser(userId: string): Promise<Report[]>;
-	/** Applies a worker event. Returns false for a missing report or an older attempt. */
+	/** Applies a worker event. Returns false for a missing report or an event older than the stored state. */
 	apply(reportId: string, update: ReportUpdate): Promise<boolean>;
 }
 
@@ -69,6 +69,11 @@ export class InMemoryReportStore implements ReportStore {
 	async apply(reportId: string, event: ReportUpdate): Promise<boolean> {
 		const report = this.reports.get(reportId);
 		if (!report || event.attempt < report.attempts) return false;
+		if (
+			event.attempt === report.attempts &&
+			Date.parse(event.at) < Date.parse(report.updatedAt)
+		)
+			return false;
 		report.status = event.status;
 		report.attempts = event.attempt;
 		report.rows = event.rows ?? report.rows;
