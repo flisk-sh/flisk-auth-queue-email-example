@@ -126,6 +126,41 @@ describe("reports-api", () => {
 		expect(report.error).toBeUndefined();
 	});
 
+	it("does not let a redelivered event from an older attempt undo a sent report", async () => {
+		const { app, queue, as, request } = await setup();
+		const { data } = await (
+			await request("alice", { period: "2026-08" })
+		).json();
+		const sentAt = "2026-09-01T00:00:01.000Z";
+		await queue.publish(SUBJECT_STATUS, {
+			reportId: data.id,
+			status: "sent",
+			attempt: 2,
+			at: sentAt,
+			rows: 30,
+			sentTo: "alice@example.test",
+		} satisfies ReportStatus);
+		await queue.publish(SUBJECT_STATUS, {
+			reportId: data.id,
+			status: "retrying",
+			attempt: 1,
+			at: "2026-09-01T00:00:00.000Z",
+			error: "first attempt failed",
+		} satisfies ReportStatus);
+
+		const [report] = (
+			await (await app.request("/api/reports", { headers: as("alice") })).json()
+		).data;
+		expect(report).toMatchObject({
+			status: "sent",
+			attempts: 2,
+			updatedAt: sentAt,
+			rows: 30,
+			sentTo: "alice@example.test",
+		});
+		expect(report.error).toBeUndefined();
+	});
+
 	it("only lists the caller's own reports", async () => {
 		const { app, as, request } = await setup();
 		await request("alice", { period: "2026-08" });
