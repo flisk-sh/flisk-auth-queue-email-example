@@ -61,12 +61,12 @@ export class PostgresReportStore implements ReportStore {
 	async apply(reportId: string, event: ReportUpdate): Promise<boolean> {
 		const rows = await this.sql`update reports set
         status = ${event.status},
-        attempts = greatest(attempts, ${event.attempt}),
+        attempts = ${event.attempt},
         row_count = coalesce(${event.rows ?? null}, row_count),
         sent_to = coalesce(${event.sentTo ?? null}, sent_to),
         error = ${event.error ?? null},
         updated_at = ${event.at}::timestamptz
-      where id = ${reportId}
+      where id = ${reportId} and attempts <= ${event.attempt}
       returning id`;
 		return rows.length > 0;
 	}
