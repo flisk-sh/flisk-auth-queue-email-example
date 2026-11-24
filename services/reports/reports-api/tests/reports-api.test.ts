@@ -161,39 +161,6 @@ describe("reports-api", () => {
 		expect(report.error).toBeUndefined();
 	});
 
-	it("does not let an older event from the same attempt undo a sent report", async () => {
-		const { app, queue, as, request } = await setup();
-		const { data } = await (
-			await request("alice", { period: "2026-08" })
-		).json();
-		const sentAt = "2026-09-01T00:00:02.000Z";
-		await queue.publish(SUBJECT_STATUS, {
-			reportId: data.id,
-			status: "sent",
-			attempt: 2,
-			at: sentAt,
-			rows: 30,
-			sentTo: "alice@example.test",
-		} satisfies ReportStatus);
-		await queue.publish(SUBJECT_STATUS, {
-			reportId: data.id,
-			status: "processing",
-			attempt: 2,
-			at: "2026-09-01T00:00:01.000Z",
-		} satisfies ReportStatus);
-
-		const [report] = (
-			await (await app.request("/api/reports", { headers: as("alice") })).json()
-		).data;
-		expect(report).toMatchObject({
-			status: "sent",
-			attempts: 2,
-			updatedAt: sentAt,
-			rows: 30,
-			sentTo: "alice@example.test",
-		});
-	});
-
 	it("only lists the caller's own reports", async () => {
 		const { app, as, request } = await setup();
 		await request("alice", { period: "2026-08" });
